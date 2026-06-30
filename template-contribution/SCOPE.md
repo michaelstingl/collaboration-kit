@@ -17,7 +17,7 @@ repos:                  # optional — for code-contribution kits; one entry per
 
 > **Contribution kit** (yields an issue/PR): adds `repos:`, the Symptom / Reproduce / Gate / Merge-order sections, and `issue.md` / `pr-body.md`. For a non-code kit, use the lean `template/` instead.
 
-One-paragraph dossier of the problem. **Kit conventions** (SCOPE.md format, markers, board): locally `_work/collaboration-kit/README.md`, canonical <https://github.com/michaelstingl/collaboration-kit> — this kit follows the `kit_version` (stamped by `new-kit.ts`).
+One-paragraph dossier of the problem. **Kit conventions** (SCOPE.md format, markers, board): locally `_work/task-kit/README.md`, canonical <https://github.com/michaelstingl/task-kit> — this kit follows the `kit_version` (stamped by `new-kit.ts`).
 
 <!--
 Open work lives as structured TODO markers (HTML comments, invisible when rendered).

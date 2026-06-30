@@ -1,4 +1,6 @@
-# collaboration-kit
+# task-kit
+
+> A durable folder per piece of work — an issue, a fix, an investigation. Personal by default, shareable on demand. (Scale-agnostic: a kit is one *problem*, any size — not tied to a scrum "task".)
 
 A working convention: keep one durable scratch folder, a "kit," for each problem. The folder holds the problem's analysis, its build (a git worktree), and its issue and PR bodies. Keeping them together lets the work survive long sessions, keeps parallel tasks separate, and lets the pull request open from its own branch.
 
@@ -79,20 +81,20 @@ The kit system is consumed by symlinking this repo into a project's gitignored s
 **Requires [bun](https://bun.sh).** Once, from the project root:
 
 ```sh
-git clone https://github.com/michaelstingl/collaboration-kit   # anywhere stable
-ln -s <relative-path-to-the-clone> _work/collaboration-kit      # gitignored; relative so it travels within a consistent layout
+git clone https://github.com/michaelstingl/task-kit   # anywhere stable
+ln -s <relative-path-to-the-clone> _work/task-kit      # gitignored; relative so it travels within a consistent layout
 mkdir -p _work/kits _work/kit-archive
 ```
 
 Then create and view kits **from the project root** (not from inside the clone):
 
 ```sh
-bun _work/collaboration-kit/new-kit.ts <slug> --title "..."   # add --contribution for a PR kit
-bun _work/collaboration-kit/board.ts                          # overview (--todos, --all)
-bun _work/collaboration-kit/watch.ts                          # what moved in referenced issues/PRs (needs gh)
+bun _work/task-kit/new-kit.ts <slug> --title "..."   # add --contribution for a PR kit
+bun _work/task-kit/board.ts                          # overview (--todos, --all)
+bun _work/task-kit/watch.ts                          # what moved in referenced issues/PRs (needs gh)
 ```
 
-`_work/` is personal and gitignored, so each teammate repeats the symlink on their own machine (it is not committed). For a fresh agent session, point it at `_work/collaboration-kit/AGENTS.md`.
+`_work/` is personal and gitignored, so each teammate repeats the symlink on their own machine (it is not committed). For a fresh agent session, point it at `_work/task-kit/AGENTS.md`.
 
 ## Naming
 

@@ -170,7 +170,7 @@ const openTotal = shown.reduce((n, r) => n + r.markers.filter(isOpen).length, 0)
 const hiddenNote = hiddenCount ? `, ${hiddenCount} done/closed hidden (--all)` : "";
 console.log(`\n${shown.length} kit(s) in ${kitsDir}, ${openTotal} open marker(s)${bad ? `, ${bad} with warnings` : ""}${hiddenNote}.`);
 console.log(`OPEN flags: T=TODO F=FIXME D=DECISION Q=QUESTION` + (showTodos ? "" : "  ·  --todos to list them"));
-console.log(`kit convention v${schema.version ?? "?"}  ·  board.ts (collaboration-kit)`);
+console.log(`kit convention v${schema.version ?? "?"}  ·  board.ts (task-kit)`);
 
 // ---- optional: list open markers grouped by kit, priority-sorted ----
 if (showTodos) {

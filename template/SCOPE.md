@@ -10,7 +10,7 @@ updated: <YYYY-MM-DD>
 
 # Scope: <problem or topic>
 
-One-paragraph dossier of the problem. **Kit conventions** (SCOPE.md format, markers, board): locally `_work/collaboration-kit/README.md`, canonical <https://github.com/michaelstingl/collaboration-kit> — this kit follows the `kit_version` (stamped by `new-kit.ts`).
+One-paragraph dossier of the problem. **Kit conventions** (SCOPE.md format, markers, board): locally `_work/task-kit/README.md`, canonical <https://github.com/michaelstingl/task-kit> — this kit follows the `kit_version` (stamped by `new-kit.ts`).
 
 <!--
 Open work lives as structured TODO markers (HTML comments, invisible when rendered).
