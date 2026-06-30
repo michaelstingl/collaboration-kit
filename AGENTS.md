@@ -1,7 +1,7 @@
-# AGENTS.md — collaboration-kit
+# AGENTS.md — task-kit
 
 Agent entry point. To use the kit convention here (or wherever this repo is symlinked,
-e.g. `_work/collaboration-kit`):
+e.g. `_work/task-kit`):
 
 1. Read **[`README.md`](./README.md)** — the full, self-contained guide (what a kit is,
    the `SCOPE.md` format, markers, versioning). It is the single source; this file does

@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com); versioning follows SemVe
 README "Versioning" section). The canonical version number lives only in `kit.schema.json`
 (`version`); this file is the only place release notes live.
 
+## 0.6.1
+
+### Changed
+- Renamed the project **`collaboration-kit` → `task-kit`** — clearer ("collaboration" over-claimed; it is a durable, personal-by-default folder per piece of work). Updated the repo, the schema `$id`, the tooling self-references, and the README tagline. Old GitHub URLs redirect. The convention itself is unchanged.
+
 ## 0.6.0
 
 ### Added
