@@ -18,7 +18,44 @@ The convention is small. Most of it is a naming rule and a folder layout.
 
 ## Status
 
-Version 0.1, experimental. The conventions will change. A kit records the version it was built under in `kit_version` (in `SCOPE.md`), so an older kit stays readable after the schema changes.
+Experimental; the conventions will change. The canonical version lives once in `kit.schema.json` (`version`) and is reported by `board.ts`; release history is in [`CHANGELOG.md`](./CHANGELOG.md). A kit records the `MAJOR.MINOR` it was built under in `kit_version` (in `SCOPE.md`), so an older kit stays readable after the schema changes.
+
+## The board
+
+`board.ts` renders a read-only status board over `kits/*/SCOPE.md` and aggregates the structured TODO markers. **Requires [bun](https://bun.sh).**
+
+```sh
+bun board.ts            # auto-finds _work/kits, then kits, then .
+bun board.ts --todos    # also list open markers, priority-sorted
+```
+
+It reads the status order and field rules from `kit.schema.json` (one source) and warns on drift: status off-enum, `kit` slug ≠ folder name, malformed dates. It is an **optional snapshot** — the markers and per-kit `## Changelog` inside each `SCOPE.md` remain the source of truth.
+
+**Two changelogs, different scopes:** the repo-level `CHANGELOG.md` is release notes for this convention/tooling; a kit's own `## Changelog` is that kit's worklog. They never overlap.
+
+### Markers
+
+Open work lives as HTML-comment markers inside any `*.md` in a kit (invisible when rendered):
+
+```
+<!-- TODO(owner=alice, priority=high, due=2026-04-10, id=T001): description -->
+```
+
+Kinds: `TODO` `FIXME` `DECISION` `QUESTION`. Attrs are optional; a marker counts as open unless `status=done`/`wontfix`. Edit the marker in place — never an aggregate.
+
+## Versioning
+
+Semantic versioning. `kit.schema.json` is the contract, so its compatibility sets the bump:
+
+- **MAJOR** — breaking: a new required field, a removed or renamed field, a tightened type/enum that invalidates existing kits, or an incompatible marker-syntax change. Old kits, or an older `board.ts`, may stop working.
+- **MINOR** — additive, backward-compatible: a new optional field, a new allowed value or marker kind, a new `board.ts` feature. Old kits stay valid; an older board still works.
+- **PATCH** — no contract change: a `board.ts` fix or a doc/wording change.
+
+`kit.schema.json` (`version`) and `board.ts` (which reads it) carry the full `MAJOR.MINOR.PATCH`. Each kit's `kit_version` records only the `MAJOR.MINOR` it was built under — enough to know which contract it follows; PATCH does not affect reading.
+
+While `0.x` (experimental), a MINOR may still break. The first plugin/skill release cuts `1.0.0`; after that strict SemVer applies and the plugin's `plugin.json` version tracks the convention version.
+
+**Single source of truth (so a release touches as few files as possible):** the version number lives only in `kit.schema.json` (`version`) — `board.ts` reads it, the README never restates it. Release notes live only in `CHANGELOG.md`. A PATCH/MINOR release therefore touches exactly two files: `kit.schema.json` and `CHANGELOG.md`. (`template/SCOPE.md`'s `kit_version` is a per-kit stamp, not a copy of the release version; bump it only when `MAJOR.MINOR` changes, or let tooling stamp it at kit creation.)
 
 ## Personal by default, shareable on demand
 
@@ -38,7 +75,13 @@ A kit is named after the problem, not the issue number. Issue and PR numbers liv
 
 ## Starting a kit
 
-Copy the skeleton into a gitignored scratch directory (for example `_work/`) and rename it:
+Use the helper (stamps `kit`, `kit_version`, dates, and status from the schema — requires bun):
+
+```sh
+bun new-kit.ts <slug> --title "what it is"
+```
+
+Or copy the skeleton by hand into a gitignored scratch directory (then fill the frontmatter; `kit_version` is optional):
 
 ```sh
 cp -r template _work/kits/<slug>
@@ -71,12 +114,11 @@ kits/session-expiry/
   issue-client.md  pr-client.md
 ```
 
-`SCOPE.md` carries light YAML frontmatter so kits stay scannable. `kit_version` records the conventions the kit was built under. `repos:` is a list of one or more entries, so a single-repo kit is a one-element list and the schema does not change when a second repo joins:
+`SCOPE.md` carries light YAML frontmatter so kits stay scannable. The authoritative field list and validation rules live in [`kit.schema.json`](./kit.schema.json) — this prose does not re-enumerate them, to avoid drift. `repos:` is an optional list of one or more entries (for kits that yield a PR), so a single-repo kit is a one-element list and nothing changes when a second repo joins:
 
 ```yaml
 ---
 kit: session-expiry
-kit_version: 0.1        # kit conventions this kit was built under
 title: "session expiry: server cutoff + client re-auth prompt"
 status: building        # scoping, building, submitted, merged, closed, parked. Kit-level; merged only once every repo's PR is in.
 created: 2026-06-02
