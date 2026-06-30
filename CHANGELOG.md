@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com); versioning follows SemVe
 README "Versioning" section). The canonical version number lives only in `kit.schema.json`
 (`version`); this file is the only place release notes live.
 
+## 0.5.0
+
+### Added
+- Test suite (`bun test`): integration tests for `board.ts` and `new-kit.ts` — frontmatter parsing (trailing comments, block YAML), marker aggregation, slug ≠ folder, terminal-status hiding, lean vs contribution creation.
+- `board.ts` warns when a kit's `kit_version` differs from the schema's `MAJOR.MINOR` (flags kits built under an older convention).
+
 ## 0.4.0
 
 Close the loop: the full kit lifecycle and consumer onboarding are now covered.
