@@ -33,6 +33,8 @@ It reads the status order and field rules from `kit.schema.json` (one source) an
 
 **Two changelogs, different scopes:** the repo-level `CHANGELOG.md` is release notes for this convention/tooling; a kit's own `## Changelog` is that kit's worklog. They never overlap.
 
+**Lifecycle:** when a kit is finished, set `status: merged | done | closed` — `board.ts` hides those by default (`--all` shows them), so the board stays "what needs attention". To retire a kit entirely, move it out of `kits/` into a sibling `kit-archive/` (the board only scans `kits/`).
+
 ### Markers
 
 Open work lives as HTML-comment markers inside any `*.md` in a kit (invisible when rendered):
@@ -55,11 +57,39 @@ Semantic versioning. `kit.schema.json` is the contract, so its compatibility set
 
 While `0.x` (experimental), a MINOR may still break. The first plugin/skill release cuts `1.0.0`; after that strict SemVer applies and the plugin's `plugin.json` version tracks the convention version.
 
-**Single source of truth (so a release touches as few files as possible):** the version number lives only in `kit.schema.json` (`version`) — `board.ts` reads it, the README never restates it. Release notes live only in `CHANGELOG.md`. A PATCH/MINOR release therefore touches exactly two files: `kit.schema.json` and `CHANGELOG.md`. (`template/SCOPE.md`'s `kit_version` is a per-kit stamp, not a copy of the release version; bump it only when `MAJOR.MINOR` changes, or let tooling stamp it at kit creation.)
+**Single source of truth (so a release touches as few files as possible):** the version number lives only in `kit.schema.json` (`version`) — `board.ts` reads it, the README never restates it. Release notes live only in `CHANGELOG.md`. A PATCH/MINOR release therefore touches exactly two files: `kit.schema.json` and `CHANGELOG.md`. (`kit_version` in a kit is a per-kit stamp set by `new-kit.ts`, not a copy of the release version.)
+
+### Releasing
+
+1. Bump `version` in `kit.schema.json`.
+2. Add the matching entry to `CHANGELOG.md`.
+3. Tag and push: `git tag vX.Y.Z && git push --tags` (optionally `gh release create vX.Y.Z` with the CHANGELOG section as notes).
+
+Nothing else carries the number, so there is nothing else to update.
 
 ## Personal by default, shareable on demand
 
 A kit usually lives in one person's own gitignored scratch, private to that person. That fits most cases, because a kit is working notes and the pull request is what others read. When a handoff or a review calls for it, the kit can be shared. The unit to share is `SCOPE.md`, the dossier that records the decision, the rejected alternative, the reproduction, and the verification evidence. Post it into the issue or PR thread, or hand over the folder. The `kit_version` field tells the reader which conventions it follows.
+
+## Adopt in a project
+
+The kit system is consumed by symlinking this repo into a project's gitignored scratch.
+**Requires [bun](https://bun.sh).** Once, from the project root:
+
+```sh
+git clone https://github.com/michaelstingl/collaboration-kit   # anywhere stable
+ln -s <relative-path-to-the-clone> _work/collaboration-kit      # gitignored; relative so it travels within a consistent layout
+mkdir -p _work/kits _work/kit-archive
+```
+
+Then create and view kits **from the project root** (not from inside the clone):
+
+```sh
+bun _work/collaboration-kit/new-kit.ts <slug> --title "..."   # add --contribution for a PR kit
+bun _work/collaboration-kit/board.ts                          # overview (--todos, --all)
+```
+
+`_work/` is personal and gitignored, so each teammate repeats the symlink on their own machine (it is not committed). For a fresh agent session, point it at `_work/collaboration-kit/AGENTS.md`.
 
 ## Naming
 

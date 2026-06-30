@@ -5,6 +5,18 @@ Format: [Keep a Changelog](https://keepachangelog.com); versioning follows SemVe
 README "Versioning" section). The canonical version number lives only in `kit.schema.json`
 (`version`); this file is the only place release notes live.
 
+## 0.4.0
+
+Close the loop: the full kit lifecycle and consumer onboarding are now covered.
+
+### Added
+- README "Adopt in a project" — how a project/teammate consumes the toolkit (clone + symlink `_work/collaboration-kit`, create `_work/kits` + `_work/kit-archive`, run tools from the project root, bun prerequisite).
+- README "Releasing" — the release steps (bump schema, CHANGELOG, tag).
+- Lifecycle: `board.ts` hides terminal-status kits (`merged`/`done`/`closed`) by default; `--all` shows them. Retiring a kit = move it to a sibling `kit-archive/`.
+
+### Changed
+- `template-contribution/SCOPE.md` status comment aligned with the schema enum.
+
 ## 0.3.0
 
 ### Changed

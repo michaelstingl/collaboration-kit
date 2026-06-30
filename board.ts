@@ -28,6 +28,7 @@ const required: string[] = schema.required ?? [];
 // ---- args ----
 const argv = process.argv.slice(2);
 const showTodos = argv.includes("--todos");
+const showAll = argv.includes("--all"); // include terminal-status kits (merged/done/closed)
 const argDir = argv.find((a) => !a.startsWith("--"));
 const candidates = argDir ? [argDir] : ["_work/kits", "kits", "."];
 const kitsDir = candidates.find((d) => existsSync(d) && statSync(d).isDirectory());
@@ -149,23 +150,29 @@ for (const name of readdirSync(kitsDir)) {
 }
 rows.sort((a, b) => rank(a.fm.status) - rank(b.fm.status) || String(a.fm.kit).localeCompare(String(b.fm.kit)));
 
+// ---- terminal statuses (merged/done/closed) are hidden by default; --all shows them ----
+const TERMINAL = new Set(["merged", "done", "closed"]);
+const shown = showAll ? rows : rows.filter((r) => !TERMINAL.has(String(r.fm.status)));
+const hiddenCount = rows.length - shown.length;
+
 // ---- print table ----
-const w = Math.max(3, ...rows.map((r) => String(r.fm.kit).length));
+const w = Math.max(3, ...shown.map((r) => String(r.fm.kit).length), 3);
 console.log(`${"STATUS".padEnd(10)} ${"KIT".padEnd(w)} ${"OPEN".padEnd(11)} TITLE`);
 console.log(`${"-".repeat(10)} ${"-".repeat(w)} ${"-".repeat(11)} -----`);
-for (const { fm, errs, markers } of rows) {
+for (const { fm, errs, markers } of shown) {
   const warn = errs.length ? `  ⚠ ${errs.join("; ")}` : "";
   console.log(`${String(fm.status ?? "?").padEnd(10)} ${String(fm.kit).padEnd(w)} ${flags(markers).padEnd(11)} ${fm.title ?? ""}${warn}`);
 }
-const bad = rows.filter((r) => r.errs.length).length;
-const openTotal = rows.reduce((n, r) => n + r.markers.filter(isOpen).length, 0);
-console.log(`\n${rows.length} kit(s) in ${kitsDir}, ${openTotal} open marker(s)${bad ? `, ${bad} with warnings` : ""}.`);
+const bad = shown.filter((r) => r.errs.length).length;
+const openTotal = shown.reduce((n, r) => n + r.markers.filter(isOpen).length, 0);
+const hiddenNote = hiddenCount ? `, ${hiddenCount} done/closed hidden (--all)` : "";
+console.log(`\n${shown.length} kit(s) in ${kitsDir}, ${openTotal} open marker(s)${bad ? `, ${bad} with warnings` : ""}${hiddenNote}.`);
 console.log(`OPEN flags: T=TODO F=FIXME D=DECISION Q=QUESTION` + (showTodos ? "" : "  ·  --todos to list them"));
 console.log(`kit convention v${schema.version ?? "?"}  ·  board.ts (collaboration-kit)`);
 
 // ---- optional: list open markers grouped by kit, priority-sorted ----
 if (showTodos) {
-  for (const { fm, markers } of rows) {
+  for (const { fm, markers } of shown) {
     const open = markers.filter(isOpen).sort((a, b) => (PRIO[a.attrs.priority ?? ""] ?? 3) - (PRIO[b.attrs.priority ?? ""] ?? 3));
     if (!open.length) continue;
     console.log(`\n### ${fm.kit}`);
