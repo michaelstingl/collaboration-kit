@@ -5,6 +5,15 @@ Format: [Keep a Changelog](https://keepachangelog.com); versioning follows SemVe
 README "Versioning" section). The canonical version number lives only in `kit.schema.json`
 (`version`); this file is the only place release notes live.
 
+## 0.3.0
+
+### Changed
+- The default `template/` is now lean and domain-agnostic (`Scope · Notes · Decision · Outcome · Next steps · Changelog`) — no code-fix sections, so a generic kit (setup, research, ops, design) carries no PR/repro noise.
+
+### Added
+- `template-contribution/` — the PR-yielding variant: adds `repos:`, the `Symptom`/`Reproduce`/`Gate`/`Merge order` sections, and the `issue.md` / `pr-body.md` stubs.
+- `new-kit.ts --contribution` selects the contribution variant (default is lean).
+
 ## 0.2.1
 
 ### Added

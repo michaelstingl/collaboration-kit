@@ -75,32 +75,39 @@ A kit is named after the problem, not the issue number. Issue and PR numbers liv
 
 ## Starting a kit
 
-Use the helper (stamps `kit`, `kit_version`, dates, and status from the schema — requires bun):
+Use the helper (stamps `kit`, `kit_version`, dates, status from the schema — requires bun):
 
 ```sh
-bun new-kit.ts <slug> --title "what it is"
+bun new-kit.ts <slug> --title "what it is"           # lean kit (default)
+bun new-kit.ts <slug> --title "..." --contribution   # kit that yields an issue/PR
 ```
 
-Or copy the skeleton by hand into a gitignored scratch directory (then fill the frontmatter; `kit_version` is optional):
+There are two shapes:
 
-```sh
-cp -r template _work/kits/<slug>
-```
+- **Lean kit** (default, `template/`): a domain-agnostic `SCOPE.md` — Scope · Notes · Decision · Outcome · Next steps · Changelog. For setup, research, ops, design, or any non-code problem.
+- **Contribution kit** (`--contribution`, `template-contribution/`): adds `repos:`, the Symptom / Reproduce / Gate / Merge-order sections, and `issue.md` / `pr-body.md` stubs (with `<!-- guidance -->` comments to delete before posting).
 
-`template/` holds a `SCOPE.md` skeleton and `issue.md` and `pr-body.md` stubs. The stubs carry `<!-- guidance -->` comments to delete before posting. The template is a copy source, not a kit. Fill in the frontmatter, then add the worktrees described below.
+To copy by hand instead: `cp -r template _work/kits/<slug>` (or `template-contribution`). The template is a copy source, not a kit.
 
 ## What's in a kit
 
-A small single-repo kit contains only the starred files:
+A **lean kit** is just its dossier:
 
 ```
 kits/<slug>/
-  SCOPE.md        ★ static dossier: what it is, repro, verification evidence, the decision
+  SCOPE.md        the dossier (Scope, Notes, Decision, Outcome, Next steps, Changelog)
+  PLAN.md           optional: for real investigations (theses, alternatives, dated worklog)
+```
+
+A **contribution kit** adds the PR machinery:
+
+```
+kits/<slug>/
+  SCOPE.md        + Symptom / Reproduce / Gate / Merge-order, and repos: in the frontmatter
   <repo>-fix/       git worktree where the branch is built and verified
-  issue.md        ★ the issue body (one physical line per paragraph or bullet)
-  pr-body.md      ★ the PR body (same line grammar)
-  PLAN.md           for real investigations: theses, alternatives, dated worklog
-  FIX-PLAN.md       when the approach needs a written design brief
+  issue.md          the issue body (one physical line per paragraph or bullet)
+  pr-body.md        the PR body (same line grammar)
+  FIX-PLAN.md       optional: when the approach needs a written design brief
 ```
 
 A cross-repo problem uses one kit with one worktree per repo and one body pair per repo. A single `SCOPE.md` covers the whole problem:

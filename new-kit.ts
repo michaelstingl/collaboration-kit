@@ -14,7 +14,9 @@ const schema = JSON.parse(readFileSync(join(here, "kit.schema.json"), "utf8"));
 const kitProps = schema.properties ?? {};
 
 // ---- args: positional slug + --flag value pairs ----
-const argv = process.argv.slice(2);
+const rawArgv = process.argv.slice(2);
+const contribution = rawArgv.includes("--contribution"); // boolean flag (no value)
+const argv = rawArgv.filter((a) => a !== "--contribution");
 const flags: Record<string, string> = {};
 const pos: string[] = [];
 for (let i = 0; i < argv.length; i++) {
@@ -26,7 +28,7 @@ const slug = pos[0];
 
 function die(msg: string): never { console.error(`new-kit: ${msg}`); process.exit(1); }
 
-if (!slug) die(`usage: bun new-kit.ts <slug> [--title "..."] [--status active] [--kits <dir>]`);
+if (!slug) die(`usage: bun new-kit.ts <slug> [--title "..."] [--status active] [--contribution] [--kits <dir>]`);
 const slugPat = kitProps.kit?.pattern && new RegExp(kitProps.kit.pattern);
 if (slugPat && !slugPat.test(slug)) die(`slug "${slug}" does not match ${kitProps.kit.pattern}`);
 
@@ -38,8 +40,10 @@ mkdirSync(kitsDir, { recursive: true });
 const dest = join(kitsDir, slug);
 if (existsSync(dest)) die(`kit already exists: ${dest}`);
 
-// ---- copy template, stamp SCOPE.md ----
-cpSync(join(here, "template"), dest, { recursive: true });
+// ---- copy template (lean by default, contribution variant with --contribution), stamp SCOPE.md ----
+const tmpl = contribution ? "template-contribution" : "template";
+if (!existsSync(join(here, tmpl))) die(`template not found: ${tmpl}`);
+cpSync(join(here, tmpl), dest, { recursive: true });
 
 const mm = String(schema.version ?? "0.0").split(".").slice(0, 2).join("."); // MAJOR.MINOR
 const today = new Date().toISOString().slice(0, 10);
@@ -59,5 +63,5 @@ scope = scope
   .replace(/^updated:.*$/m, `updated: ${today}`);
 writeFileSync(scopePath, scope);
 
-console.log(`created ${dest}/  (kit=${slug}, kit_version=${mm}, status=${status}, created=${today})`);
+console.log(`created ${dest}/  (kit=${slug}, kit_version=${mm}, status=${status}, created=${today}${contribution ? ", contribution" : ""})`);
 console.log(`next: edit ${scopePath} (title, dossier) — then: bun ${join("…", "board.ts")}`);
