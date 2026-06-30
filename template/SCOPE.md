@@ -1,24 +1,37 @@
 ---
 kit: <slug>
-kit_version: 0.1        # kit conventions this kit was built under
-title: "<one-line problem statement>"
-status: scoping         # scoping, building, submitted, merged, closed, parked. Kit-level; merged only once every repo's PR is in.
+title: "<one-line problem or topic>"
+status: active          # active | blocked | parked | reference | done. Kit-level. Domain methods may use their own lifecycle (e.g. scoping/building/submitted/merged); board.ts renders any string.
+area: [<tag>]           # optional: topic tags for filtering (board.ts)
+links: [<org/repo#n>, <url>]   # optional: related issues / PRs / sources
 created: <YYYY-MM-DD>
 updated: <YYYY-MM-DD>
-repos:                  # one entry per repo the problem touches; single-repo = one entry
+repos:                  # optional — for code-contribution kits; one entry per repo. Delete for non-code kits.
   - repo: <org>/<repo>
     branch: fix/<slug>
     issue:              # filled when the issue is posted
     pr:                 # filled when the PR is opened
 ---
 
-# Scope: <problem>
+# Scope: <problem or topic>
 
 One-paragraph dossier of the problem. Kit conventions: see the repo README.
 
+<!--
+Open work lives as structured TODO markers (HTML comments, invisible when rendered).
+board.ts aggregates them; a marker counts as open unless status=done or status=wontfix.
+Write one per item, each as its own comment, e.g.:
+  <!- - TODO(owner=me, priority=high, due=2026-04-10, id=T001): what to do - ->
+  <!- - DECISION(owner=me, id=D001): what to decide - ->
+  <!- - QUESTION(owner=open, id=Q001): open question - ->
+  <!- - FIXME(priority=low, id=F001): bug or inconsistency - ->
+(Remove the spaces in the comment markers above — they are only here so this
+example does not get picked up by the aggregator.)
+-->
+
 ## Symptom
 
-What is observably wrong. For a build/dependency bug, the symptom is the gate failing on a clean checkout.
+What is observably wrong. For a build/dependency bug, the symptom is the gate failing on a clean checkout. (Code/bugfix kits; delete for non-code kits.)
 
 ## Reproduce (the gate, before the fix)
 
@@ -27,7 +40,7 @@ What is observably wrong. For a build/dependency bug, the symptom is the gate fa
 # <the error, verbatim>
 ```
 
-Static corroboration, if any (a grep, a missing entry).
+Static corroboration, if any (a grep, a missing entry). (Code/bugfix kits; delete otherwise.)
 
 ## Decision
 
@@ -41,7 +54,7 @@ Constraint check: confirm the change respects the project's dominant constraint.
 - `<test>` → result
 - `<build>` → result
 
-Diff scope: which files. Name any untested gap; the gate is the one check independent of reasoning.
+Diff scope: which files. Name any untested gap; the gate is the one check independent of reasoning. (Code/bugfix kits; delete otherwise.)
 
 ## Merge order
 
@@ -57,3 +70,17 @@ Only for cross-repo kits where one PR depends on another, such as a server endpo
 
 - `issue.md` — the issue body. (multi-repo: `issue-<repo>.md` per repo)
 - `pr-body.md` — the PR body. (multi-repo: `pr-<repo>.md` per repo)
+
+## Next steps
+
+**Possibilities:**
+
+- <what this kit could feed into next>
+
+**Open items:**
+
+- <decisions / actions still pending — or track them as TODO/DECISION markers above>
+
+## Changelog
+
+- **<YYYY-MM-DD>.** Kit created.
