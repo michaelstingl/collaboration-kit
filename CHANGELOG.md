@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com); versioning follows SemVe
 README "Versioning" section). The canonical version number lives only in `kit.schema.json`
 (`version`); this file is the only place release notes live.
 
+## 0.6.0
+
+### Added
+- `watch.ts` — checks the GitHub issues/PRs each kit references (from `links:`, markers, prose) via `gh`, flagging merged/closed (●) and anything that moved since the kit was last updated (▲). Read-only; requires an authenticated `gh`.
+- Unit test for `watch.ts` ref extraction.
+
 ## 0.5.0
 
 ### Added
