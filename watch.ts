@@ -1,8 +1,9 @@
 #!/usr/bin/env bun
 // watch.ts — for each kit, check the GitHub issues/PRs it references and report what moved.
 // Scans every *.md in a kit for refs (org/repo#n and github issue/pull URLs — frontmatter
-// `links:`, markers, prose), queries `gh`, and flags merged/closed and "moved since the kit
-// was last touched" (the issue's updated_at is newer than the kit's `updated:`).
+// `links:`, markers, prose), queries `gh`, and flags merged/closed, "moved since the kit
+// was last touched" (the issue's updated_at is newer than the kit's `updated:`), and for an
+// open PR its review decision (approved / changes-requested / review-required).
 // Read-only. Requires bun + an authenticated gh.
 //
 // Usage: bun watch.ts [kitsDir]   (no arg: tries _work/kits, then kits, then .)
@@ -33,7 +34,7 @@ if (import.meta.main) {
     try { return JSON.parse(p.stdout.toString()); } catch { return null; }
   };
 
-  let kitsWithRefs = 0, moved = 0, terminal = 0;
+  let kitsWithRefs = 0, moved = 0, terminal = 0, approved = 0, changesRequested = 0;
   for (const name of readdirSync(kitsDir).sort()) {
     const dir = join(kitsDir, name);
     const lead = join(dir, "SCOPE.md");
@@ -58,13 +59,24 @@ if (import.meta.main) {
       }
       const isMoved = !!(kitUpdated && d.updated && d.updated.slice(0, 10) > kitUpdated);
       const isTerminal = state === "merged" || state === "closed";
+      // For an open PR, surface the maintainer review decision. An approval or a change
+      // request does not flip open/closed state, so the state/moved flags miss it — yet a
+      // change request is the one signal that needs action.
+      let review = "";
+      if (d.pr && !isTerminal) {
+        const rv = gh(["pr", "view", n, "--repo", `${o}/${r}`, "--json", "reviewDecision"]);
+        const rd = rv?.reviewDecision;
+        if (rd === "APPROVED") { review = "✓approved "; approved++; }
+        else if (rd === "CHANGES_REQUESTED") { review = "⚠changes-requested "; changesRequested++; }
+        else if (rd === "REVIEW_REQUIRED") { review = "review-required "; }
+      }
       if (isMoved) moved++;
       if (isTerminal) terminal++;
-      const flag = isTerminal ? "●" : isMoved ? "▲" : " ";
+      const flag = isTerminal ? "●" : review.startsWith("⚠") ? "⚠" : isMoved ? "▲" : " ";
       const when = isMoved ? `moved ${d.updated.slice(0, 10)} ` : "";
-      console.log(`  ${flag} ${ref}  [${state}]  ${when}${d.title}`);
+      console.log(`  ${flag} ${ref}  [${state}]  ${review}${when}${d.title}`);
     }
   }
   if (!kitsWithRefs) console.log("no kits reference any GitHub issues/PRs.");
-  console.log(`\n${kitsWithRefs} kit(s) with refs · ${terminal} merged/closed (●) · ${moved} moved since kit update (▲)`);
+  console.log(`\n${kitsWithRefs} kit(s) with refs · ${terminal} merged/closed (●) · ${changesRequested} changes-requested (⚠) · ${approved} approved (✓) · ${moved} moved (▲)`);
 }

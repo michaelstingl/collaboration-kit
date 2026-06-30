@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com); versioning follows SemVe
 README "Versioning" section). The canonical version number lives only in `kit.schema.json`
 (`version`); this file is the only place release notes live.
 
+## 0.6.2
+
+### Added
+- `watch.ts` now surfaces the **review decision** for open PR refs: `✓approved`, `⚠changes-requested`, or `review-required`. A change request also raises a `⚠` line flag, and the summary counts approvals and change requests. A review decision does not flip a PR's open/closed state, so the existing state/moved flags missed approvals and (more importantly) change requests; this closes that gap. Costs one extra `gh pr view` call per open PR ref. Convention/schema unchanged.
+
 ## 0.6.1
 
 ### Changed
