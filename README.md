@@ -31,6 +31,8 @@ bun board.ts --todos    # also list open markers, priority-sorted
 
 It reads the status order and field rules from `kit.schema.json` (one source) and warns on drift: status off-enum, `kit` slug ≠ folder name, `kit_version` skew (a kit built under an older convention), malformed dates. It is an **optional snapshot** — the markers and per-kit `## Changelog` inside each `SCOPE.md` remain the source of truth. Run `bun test` to exercise `board.ts` and `new-kit.ts`.
 
+**Watch upstream:** `bun watch.ts` checks the GitHub issues/PRs your kits reference (from `links:`, markers, prose) and flags merged/closed (`●`) and anything that moved since the kit was last updated (`▲`). Read-only; requires an authenticated `gh`.
+
 **Two changelogs, different scopes:** the repo-level `CHANGELOG.md` is release notes for this convention/tooling; a kit's own `## Changelog` is that kit's worklog. They never overlap.
 
 **Lifecycle:** when a kit is finished, set `status: merged | done | closed` — `board.ts` hides those by default (`--all` shows them), so the board stays "what needs attention". To retire a kit entirely, move it out of `kits/` into a sibling `kit-archive/` (the board only scans `kits/`).
@@ -87,6 +89,7 @@ Then create and view kits **from the project root** (not from inside the clone):
 ```sh
 bun _work/collaboration-kit/new-kit.ts <slug> --title "..."   # add --contribution for a PR kit
 bun _work/collaboration-kit/board.ts                          # overview (--todos, --all)
+bun _work/collaboration-kit/watch.ts                          # what moved in referenced issues/PRs (needs gh)
 ```
 
 `_work/` is personal and gitignored, so each teammate repeats the symlink on their own machine (it is not committed). For a fresh agent session, point it at `_work/collaboration-kit/AGENTS.md`.
