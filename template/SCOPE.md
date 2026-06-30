@@ -15,7 +15,7 @@ repos:                  # optional — for code-contribution kits; one entry per
 
 # Scope: <problem or topic>
 
-One-paragraph dossier of the problem. Kit conventions: see the repo README.
+One-paragraph dossier of the problem. **Kit conventions** (SCOPE.md format, markers, board): locally `_work/collaboration-kit/README.md`, canonical <https://github.com/michaelstingl/collaboration-kit> — this kit follows the `kit_version` above.
 
 <!--
 Open work lives as structured TODO markers (HTML comments, invisible when rendered).
