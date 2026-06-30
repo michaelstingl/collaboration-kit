@@ -1,7 +1,7 @@
 ---
 kit: <slug>
 title: "<one-line problem or topic>"
-status: active          # active | blocked | parked | reference | done. Kit-level. Domain methods may use their own lifecycle (e.g. scoping/building/submitted/merged); board.ts renders any string.
+status: active          # active | blocked | scoping | building | reviewing | submitted | parked | reference | merged | done | closed
 area: [<tag>]           # optional: topic tags for filtering (board.ts)
 links: [<org/repo#n>, <url>]   # optional: related issues / PRs / sources
 created: <YYYY-MM-DD>

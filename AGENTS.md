@@ -10,4 +10,6 @@ e.g. `_work/collaboration-kit`):
 3. **See status + open work:** `bun board.ts [--todos]`.
 4. The frontmatter contract is [`kit.schema.json`](./kit.schema.json); release notes are in [`CHANGELOG.md`](./CHANGELOG.md).
 
+Finished kits: set `status: merged|done|closed` (board hides them by default; `--all` shows them) or move them to a sibling `kit-archive/`. To set the system up in a new project, see the README → "Adopt in a project".
+
 Requires [bun](https://bun.sh).
