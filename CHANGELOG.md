@@ -5,6 +5,14 @@ Format: [Keep a Changelog](https://keepachangelog.com); versioning follows SemVe
 README "Versioning" section). The canonical version number lives only in `kit.schema.json`
 (`version`); this file is the only place release notes live.
 
+## 0.2.1
+
+### Added
+- `AGENTS.md` — agent entry point that points to `README.md` (the single source), so the convention is self-discoverable when the repo is symlinked into a project.
+
+### Changed
+- Template `SCOPE.md` carries a concrete pointer to the conventions (local symlink path + canonical URL + `kit_version`) instead of a vague "see the repo README", so even a handed-off `SCOPE.md` resolves the convention.
+
 ## 0.2.0
 
 The kit convention gains a machine-readable contract and tooling.
