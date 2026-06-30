@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/michaelstingl/collaboration-kit/kit.schema.json",
+  "version": "0.2.0",
+  "title": "Generic kit frontmatter",
+  "description": "YAML frontmatter at the top of each kit's lead file (SCOPE.md). One record per kit. Scan kits/*/SCOPE.md to build a board. Lenient/generic: domain-specific methods (e.g. contribution-method) may require additional fields via their own stricter schema.",
+  "type": "object",
+  "required": ["kit", "title", "status", "created", "updated"],
+  "additionalProperties": true,
+  "properties": {
+    "kit": {
+      "type": "string",
+      "description": "Kit folder name (slug). board.ts warns if it does not match the folder.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "kit_version": {
+      "type": "string",
+      "description": "MAJOR.MINOR of the kit convention this kit was built under (matches this schema's version). Optional; tooling may stamp it at kit creation.",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short human title.",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "Lifecycle stage. This enum is the single source for both validation and board sort order (board.ts reads it). A domain method that needs different stages ships its own schema.",
+      "enum": ["active", "blocked", "scoping", "building", "reviewing", "submitted", "parked", "reference", "merged", "done", "closed"]
+    },
+    "area": {
+      "type": "array",
+      "description": "Topic tags for filtering.",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "links": {
+      "type": "array",
+      "description": "Related refs: org/repo#n, URLs, repo names.",
+      "items": { "type": "string" }
+    },
+    "created": { "type": "string", "format": "date" },
+    "updated": { "type": "string", "format": "date" }
+  }
+}
